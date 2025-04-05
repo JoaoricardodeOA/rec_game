@@ -1,9 +1,13 @@
 using UnityEngine;
+using TMPro;
 
 public class PlayerScript : MonoBehaviour
 {
     private Rigidbody2D rb;
     private float moveX;
+    private CapsuleCollider2D colliderPlayer;
+    private Vector3 startPosition;  // To store the starting position
+
 
     public float speed = 5f;
     public int maxJumps = 2; // Max number of jumps
@@ -11,6 +15,8 @@ public class PlayerScript : MonoBehaviour
 
     public bool isGrounded;
     public float jumpForce = 10f;
+    public int life;
+    public TextMeshProUGUI textLife;
 
     private bool jumpQueued = false; // To track the jump button press and queue it up
 
@@ -18,6 +24,8 @@ public class PlayerScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         remainingJumps = maxJumps; // Set the remaining jumps at the start
+        colliderPlayer = GetComponent<CapsuleCollider2D>();
+        startPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -27,10 +35,22 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             jumpQueued = true;
+            
         }
         
         // Update horizontal movement input
         moveX = Input.GetAxisRaw("Horizontal");
+
+        textLife.text = life.ToString();
+
+        if(life <= 0 ){
+            colliderPlayer.enabled = false;
+        }
+        if(transform.position.y < -50)
+        {
+            Debug.Log("It's over");
+            Reset();
+        }
     }
 
     void FixedUpdate()
@@ -98,5 +118,10 @@ public class PlayerScript : MonoBehaviour
         {
             transform.eulerAngles = new Vector3(0f,0f,0f);
         }
+    }
+    void Reset(){
+        transform.position = startPosition;
+        life = 5;
+        colliderPlayer.enabled = true;
     }
 }
