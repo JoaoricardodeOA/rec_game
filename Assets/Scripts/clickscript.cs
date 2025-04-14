@@ -25,6 +25,7 @@ public class clickscript : MonoBehaviour
             renderer.material.color = Color.white;
 
         }
+
     }
 
     // Update is called once per frame
