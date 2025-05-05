@@ -124,4 +124,5 @@ public class PlayerScript : MonoBehaviour
         life = 5;
         colliderPlayer.enabled = true;
     }
+    
 }
