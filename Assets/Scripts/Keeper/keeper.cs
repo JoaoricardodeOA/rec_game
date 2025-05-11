@@ -8,6 +8,7 @@ public class keeper : MonoBehaviour
 
     public int life;
     public float speed;
+    public bool collidedWithPlayer = false;
 
 
     private Rigidbody2D rb;  // Rigidbody2D component for applying gravity
@@ -54,6 +55,7 @@ public class keeper : MonoBehaviour
         {
             if (collider.transform.position.y > transform.position.y + colliderKeeper.size.y)
             {
+                
                 rb.gravityScale = 1f; 
                 rb.velocity = new Vector2(0, -5f);
                 Destroy(this.gameObject,2f);
@@ -64,6 +66,8 @@ public class keeper : MonoBehaviour
                 
                 collider.GetComponent<PlayerScript>().life--;
             }
+            collidedWithPlayer = true;
+
             Debug.Log(collider.transform.position.y + "  "  +transform.position.y);
         }
     }
