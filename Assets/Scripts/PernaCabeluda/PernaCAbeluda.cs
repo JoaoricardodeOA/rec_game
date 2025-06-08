@@ -49,7 +49,7 @@ public class PernaCAbeluda : MonoBehaviour
             if (collider.transform.position.y > transform.position.y + colliderKeeper.size.y)
             {
                 rb.gravityScale = 1f; 
-                rb.velocity = new Vector2(0, -5f);
+                rb.linearVelocity = new Vector2(0, -5f);
                 Destroy(this.gameObject,2f);
 
             }

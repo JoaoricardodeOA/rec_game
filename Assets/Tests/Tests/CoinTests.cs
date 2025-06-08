@@ -40,7 +40,7 @@ public class CoinTests
         colliderObject.transform.position = new Vector3(1f, 0f, 0f);
 
         // Move para trigger
-        colliderObject.GetComponent<Rigidbody2D>().velocity = new Vector2(-1f, 0f);
+        colliderObject.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(-1f, 0f);
 
         yield return new WaitForSeconds(1f);
 
@@ -73,7 +73,7 @@ public class CoinTests
         testObject.transform.position = Vector3.zero;
         colliderObject.transform.position = new Vector3(1f, 0f, 0f);
 
-        colliderObject.GetComponent<Rigidbody2D>().velocity = new Vector2(-1f, 0f);
+        colliderObject.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(-1f, 0f);
 
         
 

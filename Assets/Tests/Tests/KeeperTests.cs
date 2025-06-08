@@ -51,7 +51,7 @@ public class KeeperTests
         keeperScript.b = pointB.transform;
 
         colliderObject.transform.position = new Vector3(0f, 1f, 0f); // above the keeper
-        colliderObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, -0.1f);
+        colliderObject.GetComponent<Rigidbody2D>().linearVelocity = new Vector2(0f, -0.1f);
 
         // Move para trigger
         //colliderObject.GetComponent<Rigidbody2D>().velocity = new Vector2(-2f, 0f);

@@ -6,47 +6,59 @@ public class PlayerScript : MonoBehaviour
     private Rigidbody2D rb;
     private float moveX;
     private CapsuleCollider2D colliderPlayer;
-    private Vector3 startPosition;  // To store the starting position
-
+    private Vector3 startPosition;
 
     public float speed = 5f;
-    public int maxJumps = 2; // Max number of jumps
-    private int remainingJumps; // Jumps left in the air
+    public int maxJumps = 2;
+    private int remainingJumps;
 
     public bool isGrounded;
     public float jumpForce = 10f;
     public int life;
     public TextMeshProUGUI textLife;
 
-    private bool jumpQueued = false; // To track the jump button press and queue it up
+    private bool jumpQueued = false;
+
+    // 🎧 Áudio
+    private AudioSource audioSource;
+
+    public AudioClip jumpClip;
+    public AudioClip hurtClip;
+    public AudioClip walkClip1;
+    public AudioClip walkClip2;
+    public AudioClip landOnGroundClip;
+    public AudioClip landOnEnemyClip;
+    public AudioClip collectableClip;
+    public AudioClip deathClip;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        remainingJumps = maxJumps; // Set the remaining jumps at the start
+        remainingJumps = maxJumps;
         colliderPlayer = GetComponent<CapsuleCollider2D>();
         startPosition = transform.position;
+
+        // 🎧 Inicializa o componente de áudio
+        audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // Queue up a jump if the button is pressed
         if (Input.GetButtonDown("Jump"))
         {
             jumpQueued = true;
-            
         }
-        
-        // Update horizontal movement input
-        moveX = Input.GetAxisRaw("Horizontal");
 
+        moveX = Input.GetAxisRaw("Horizontal");
         textLife.text = life.ToString();
 
-        if(life <= 0 ){
+        if (life <= 0)
+        {
             colliderPlayer.enabled = false;
+            PlayDeath();
         }
-        if(transform.position.y < -50)
+
+        if (transform.position.y < -50)
         {
             Debug.Log("It's over");
             Reset();
@@ -55,41 +67,32 @@ public class PlayerScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Apply horizontal movement
         Move();
-        
-
-        // Handle jumping
         HandleJumping();
     }
 
     void HandleJumping()
     {
-        // If we have a queued jump and we're either grounded or have air jumps left
         if (jumpQueued)
         {
             if (isGrounded)
             {
-                // Reset jump count when grounded
-                remainingJumps = maxJumps - 1; // Subtract 1 because we're using one jump now
+                remainingJumps = maxJumps - 1;
                 Jump();
-                
             }
             else if (remainingJumps > 0)
             {
-                // Air jump
                 remainingJumps--;
                 Jump();
-                jumpQueued = false;
             }
-            jumpQueued = false; 
+            jumpQueued = false;
         }
-        
     }
 
     void Jump()
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce); // Apply the jump force on the Y-axis
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        PlayJump();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -97,6 +100,12 @@ public class PlayerScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
+            PlayLandOnGround();
+        }
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            PlayLandOnEnemy();
         }
     }
 
@@ -107,22 +116,48 @@ public class PlayerScript : MonoBehaviour
             isGrounded = false;
         }
     }
+
     void Move()
     {
-        rb.velocity = new Vector2(moveX * speed, rb.velocity.y);
-        if(moveX<0)
+        rb.linearVelocity = new Vector2(moveX * speed, rb.linearVelocity.y);
+
+        if (moveX < 0)
         {
-            transform.eulerAngles = new Vector3(0f,180f,0f);
+            transform.eulerAngles = new Vector3(0f, 180f, 0f);
+            PlayWalk();
         }
-        if(moveX>0)
+        if (moveX > 0)
         {
-            transform.eulerAngles = new Vector3(0f,0f,0f);
+            transform.eulerAngles = new Vector3(0f, 0f, 0f);
+            PlayWalk();
         }
     }
-    void Reset(){
+
+    void Reset()
+    {
         transform.position = startPosition;
         life = 5;
         colliderPlayer.enabled = true;
     }
-    
+
+    // 🔊 Métodos de som
+    void PlayJump() => PlayClip(jumpClip);
+    void PlayHurt() => PlayClip(hurtClip);
+    void PlayWalk()
+    {
+        AudioClip walkClip = Random.value < 0.5f ? walkClip1 : walkClip2;
+        PlayClip(walkClip);
+    }
+    void PlayLandOnGround() => PlayClip(landOnGroundClip);
+    void PlayLandOnEnemy() => PlayClip(landOnEnemyClip);
+    void PlayCollectable() => PlayClip(collectableClip);
+    void PlayDeath() => PlayClip(deathClip);
+
+    void PlayClip(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
 }
