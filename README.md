@@ -1,5 +1,8 @@
 # 🎮 Rec Game (Alpha)
 
+![unnamed](https://github.com/user-attachments/assets/2c73cc3a-a947-47c0-a6e7-4fdbf025b2bf)
+
+
 A retro-style 2D platformer inspired by the myths and legends of Recife, Brazil — built with Unity and classic pixel art aesthetics.
 
 > **Play now:** [Unity WebGL Build](https://play.unity.com/en/games/fc06de38-d5d7-4e85-a020-0c96b26db2ca/rec-game)  
